@@ -1,0 +1,101 @@
+# General OS-related files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+env/
+venv/
+Pipfile
+Pipfile.lock
+*.pyo
+*.pyd
+.mypy_cache/
+.pytest_cache/
+
+# C++
+*.o
+*.obj
+*.exe
+*.out
+*.a
+*.lib
+*.dll
+*.dylib
+*.class
+*.lo
+*.la
+*.la*
+*.mod
+*.so
+*.swp
+*.swo
+*.bak
+*.exp
+*.pyc
+*.pyo
+*.manifest
+CMakeFiles/
+CMakeCache.txt
+*.cmake
+Makefile
+cmake_install.cmake
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Logs and debugging files
+*.log
+*.trace
+nohup.out
+
+# VSCode & JetBrains IDEs
+.vscode/
+.idea/
+*.iml
+
+# Docker
+*.dockerignore
+docker-compose.override.yml
+docker-compose.override.yaml
+.env
+.envrc
+.env.local
+
+# CI/CD
+coverage/
+.nox/
+tox/
+*.coverage
+nosetests.xml
+pytest.xml
+.jenkins/
+.github/workflows/*.log
+
+# Profiling and performance tools
+*.perf
+*.cachegrind
+*.callgrind
+*.gcda
+*.gcno
+*.gcov
+*.memtrace
+*.prof
+
+# Monitoring & Metrics
+prometheus_data/
+grafana_data/
+
+# Security files
+*.pem
+*.key
+*.crt
+*.pfx
+*.der

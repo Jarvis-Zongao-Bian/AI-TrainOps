@@ -3,3 +3,6 @@ torchvision
 numpy
 tqdm
 matplotlib
+prometheus_client  # For exposing training metrics
+psutil  # For monitoring system resources
+requests  # For integrating with Prometheus

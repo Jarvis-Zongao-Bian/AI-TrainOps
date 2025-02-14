@@ -9,17 +9,17 @@ on:
     branches:
       - main
       - master
-  workflow_dispatch:  # Allows manual trigger
+  workflow_dispatch:
 
 jobs:
   train-test:
-    runs-on: ubuntu-latest  # Use GitHub-hosted Linux runner
+    runs-on: ubuntu-latest
 
     steps:
       - name: 🚀 Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4  # Updated to v4
 
-      - name: 🐳 Set Up Docker Buildx (for caching)
+      - name: 🐳 Set Up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
       - name: 🛠️ Build Docker Image
@@ -32,7 +32,7 @@ jobs:
           docker run --rm -v $(pwd)/logs:/app/logs ai-trainops
 
       - name: 📂 Upload Logs as Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4  # 🔥 Updated to v4
         with:
           name: training-logs
           path: logs/*.log

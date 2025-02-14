@@ -19,8 +19,10 @@ jobs:
       - name: 🚀 Checkout Repository
         uses: actions/checkout@v4
 
-      - name: 🐳 Set Up Docker Buildx (for caching)
+      - name: 🐳 Set Up Docker Buildx (with docker-container driver)
         uses: docker/setup-buildx-action@v3
+        with:
+          driver: docker-container  # ✅ Enable cache export support
 
       - name: 🎯 Cache Docker Layers
         uses: actions/cache@v4
@@ -36,11 +38,11 @@ jobs:
       - name: 🚀 Build and Push Docker Image (Cache Enabled)
         run: |
           IMAGE_NAME=ghcr.io/${{ github.repository }}/ai-trainops
-          docker build \
+          docker buildx build \
             --cache-from=type=local,src=/tmp/.buildx-cache \
             --cache-to=type=local,dest=/tmp/.buildx-cache \
+            --push \
             -t $IMAGE_NAME .
-          docker push $IMAGE_NAME
 
       - name: 🏋️ Run Training Using Prebuilt Image
         run: |

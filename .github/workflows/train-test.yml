@@ -1,0 +1,38 @@
+name: AI Model Training & Testing
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch:  # Allows manual trigger
+
+jobs:
+  train-test:
+    runs-on: ubuntu-latest  # Use GitHub-hosted Linux runner
+
+    steps:
+      - name: 🚀 Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: 🐳 Set Up Docker Buildx (for caching)
+        uses: docker/setup-buildx-action@v2
+
+      - name: 🛠️ Build Docker Image
+        run: |
+          docker build -t ai-trainops .
+
+      - name: 🏋️ Run Training
+        run: |
+          mkdir -p logs
+          docker run --rm -v $(pwd)/logs:/app/logs ai-trainops
+
+      - name: 📂 Upload Logs as Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: training-logs
+          path: logs/*.log

@@ -9,30 +9,48 @@ on:
     branches:
       - main
       - master
-  workflow_dispatch:
+  workflow_dispatch:  # Allows manual trigger
 
 jobs:
   train-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # Use GitHub-hosted Linux runner
 
     steps:
       - name: 🚀 Checkout Repository
-        uses: actions/checkout@v4  # Updated to v4
+        uses: actions/checkout@v4
 
-      - name: 🐳 Set Up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+      - name: 🐳 Set Up Docker Buildx (for caching)
+        uses: docker/setup-buildx-action@v4
 
-      - name: 🛠️ Build Docker Image
+      - name: 🎯 Cache Docker Layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: 🔐 Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+
+      - name: 🚀 Build and Push Docker Image (Cache Enabled)
         run: |
-          docker build -t ai-trainops .
+          IMAGE_NAME=ghcr.io/${{ github.repository }}/ai-trainops
+          docker build \
+            --cache-from=type=local,src=/tmp/.buildx-cache \
+            --cache-to=type=local,dest=/tmp/.buildx-cache \
+            -t $IMAGE_NAME .
+          docker push $IMAGE_NAME
 
-      - name: 🏋️ Run Training
+      - name: 🏋️ Run Training Using Prebuilt Image
         run: |
+          IMAGE_NAME=ghcr.io/${{ github.repository }}/ai-trainops
+          docker pull $IMAGE_NAME
           mkdir -p logs
-          docker run --rm -v $(pwd)/logs:/app/logs ai-trainops
+          docker run --rm -v $(pwd)/logs:/app/logs $IMAGE_NAME
 
       - name: 📂 Upload Logs as Artifacts
-        uses: actions/upload-artifact@v4  # 🔥 Updated to v4
+        uses: actions/upload-artifact@v4
         with:
           name: training-logs
           path: logs/*.log

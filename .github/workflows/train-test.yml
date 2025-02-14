@@ -33,7 +33,7 @@ jobs:
             ${{ runner.os }}-buildx-
 
       - name: 🔐 Log in to GitHub Container Registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
+        run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
 
       - name: 🚀 Build and Push Docker Image (Cache Enabled)
         run: |

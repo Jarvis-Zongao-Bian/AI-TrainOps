@@ -37,7 +37,10 @@ jobs:
 
       - name: 🚀 Build and Push Docker Image (Cache Enabled)
         run: |
-          IMAGE_NAME=ghcr.io/${{ github.repository }}/ai-trainops
+          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/ai-trainops
+          IMAGE_NAME=$(echo $IMAGE_NAME | tr '[:upper:]' '[:lower:]')  # Convert to lowercase
+          echo "Using Docker image name: $IMAGE_NAME"
+          
           docker buildx build \
             --cache-from=type=local,src=/tmp/.buildx-cache \
             --cache-to=type=local,dest=/tmp/.buildx-cache \
@@ -46,7 +49,10 @@ jobs:
 
       - name: 🏋️ Run Training Using Prebuilt Image
         run: |
-          IMAGE_NAME=ghcr.io/${{ github.repository }}/ai-trainops
+          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/ai-trainops
+          IMAGE_NAME=$(echo $IMAGE_NAME | tr '[:upper:]' '[:lower:]')  # Convert to lowercase
+          echo "Pulling Docker image: $IMAGE_NAME"
+
           docker pull $IMAGE_NAME
           mkdir -p logs
           docker run --rm -v $(pwd)/logs:/app/logs $IMAGE_NAME
